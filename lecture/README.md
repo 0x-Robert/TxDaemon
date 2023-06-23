@@ -4,7 +4,7 @@
 
 - 네트워킹 아키텍처
 - 클라이언트/서버 아키텍처
-- 요청/ 응답 패턴
+- 요청 / 응답 패턴
 - IETF가 정의한 RFC 표준
 - 클라이언트 측 요청 및 서버 측 응답의 형식
 
@@ -200,6 +200,83 @@ OSI 모델은 The International Organization for Standardization (ISO)가 설계
 | 3                    | Network                            | Internet         | IP, ARP, ICMP                                                               |
 | 2                    | Data Link                          | Data Link        | PPP, IEEE 802.2                                                             |
 | 1                    | Physical                           | Physical Network | Ethernet (IEEE 802.3) Token Ring, RS-232, others                            |
+
+# 클라이언트 서버 아키텍처
+
+## 웹프로그래밍 동음이의어, 대명사
+
+다음 단어들은 같은 뜻을 가지고 있는 단어들이다.
+자주 반복되는 단어들의 뜻은 다음과 같다.
+
+- router : 네트워크에서 데이터의 전달을 촉진하는 중계 장치
+- request router : 요청 라우터
+- multiplexer : 다중 통신용 장치[채널]
+- mux = multiplexer
+- servemux : 서버 + mux
+- server : 서버
+- http router : http 라우터
+- http request router : http 요청 라우터
+- http multiplexer : http 멀티플렉서
+- http mux : http + mux
+- http servemux : http + 서버 + mux
+- http server : http + 서버
+
+단어들의 핵심 뜻을 뽑아서 설명해보면 요청을 받아서 그 요청에 따라 맞는 경로로 연결해주고 응답해주는 장치 정도로 이해하면 될 것 같다.
+즉, 서버의 뜻과 맞다.
+
+그렇다면 요청과 응답은 어떻게 연결될까??
+
+요청과 응답에 대한 메시지 형식이다. 어디의 요청과 응답일까? 바로 HTTP에서 정의하고 같이 쓰기로 약속한 표준 요청 & 응답 형식이다. 두 가지는 비슷하다. 다음을 살펴보자.
+
+# Request & response
+
+Request and response messages are similar. Both messages consist of:
+
+- a request/response line
+- zero or more header lines
+- a blank line (ie, CRLF by itself)
+- an optional message body
+
+---
+
+HTTP는 우리가 위에서 OSI 모델을 살펴볼 때 응용프로그램 계층에서 사용한다고 했던 프로토콜이다. 위키피디아의 내용을 살펴보자
+https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+
+## HTTP request
+
+Request
+
+- request line
+- headers
+- optional message body
+
+Request-Line
+
+- Method SP Request-URI SP HTTP-Version CRLF
+
+example request line:
+
+- GET /path/to/file/index.html HTTP/1.1
+
+---
+
+## HTTP response
+
+Reponse
+
+- status line
+- headers
+- optional message body
+
+Status-Line
+
+- HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+
+example status line:
+
+- HTTP/1.1 200 OK
+
+---
 
 # Template
 
