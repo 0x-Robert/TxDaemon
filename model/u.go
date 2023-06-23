@@ -8,17 +8,17 @@ import (
 	"io"
 	"net/http"
 
-	"block-go-web/config"
+	"go-web-boilerplate/config"
 )
 
 func PutUser(r *http.Request) (User, error) {
 	u := User{}
-
-	u.UserName = r.FormValue("UserName")
-	u.Password = getCode(r.FormValue("Password"))
-	u.First = r.FormValue("First")
-	u.Last = r.FormValue("Last")
-	u.Role = r.FormValue("Role")
+	fmt.Println("Putuser ", r)
+	u.UserName = r.FormValue("username")
+	u.Password = getCode(r.FormValue("password"))
+	u.First = r.FormValue("first")
+	u.Last = r.FormValue("last")
+	u.Role = r.FormValue("role")
 
 	_, err := config.DB.Exec("INSERT INTO account (name, password, first, last, role) VALUES ($1, $2, $3, $4 $5)", u.UserName, u.Password, u.First, u.Last, u.Role)
 	if err != nil {

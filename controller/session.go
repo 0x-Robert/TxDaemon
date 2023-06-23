@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"block-go-web/model"
+	"go-web-boilerplate/model"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -21,7 +21,6 @@ func GetUser(w http.ResponseWriter, req *http.Request) model.User {
 			Name:  "session",
 			Value: sID.String(),
 		}
-
 	}
 	c.MaxAge = model.SessionLength
 	http.SetCookie(w, c)

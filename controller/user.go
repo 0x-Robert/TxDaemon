@@ -5,44 +5,51 @@ import (
 	"net/http"
 	"time"
 
-	"block-go-web/model"
+	"go-web-boilerplate/config"
+	"go-web-boilerplate/model"
 
 	uuid "github.com/satori/go.uuid"
 )
 
-// func Bar(w http.ResponseWriter, req *http.Request) {
-// 	fmt.Println("bar", bar)
-// 	u := GetUser(w, req)
-// 	if !AlreadyLoggedIn(req) {
-// 		http.Redirect(w, req, "/", http.StatusSeeOther)
-// 		return
-// 	}
-// 	if u.Role != "007" {
-// 		http.Error(w, "You must be 007 to enter the bar", http.StatusForbidden)
-// 		return
-// 	}
-// 	model.Tpl.ExecuteTemplate(w, "bar.gohtml", u)
-// }
+func Bar(w http.ResponseWriter, req *http.Request) {
+	u := GetUser(w, req)
+	if !AlreadyLoggedIn(w, req) {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+	if u.Role != "007" {
+		http.Error(w, "You must be 007 to enter the bar", http.StatusForbidden)
+		return
+	}
+	ShowSessions()
+
+	config.TPL.ExecuteTemplate(w, "bar.gohtml", u)
+}
 
 func Signup(w http.ResponseWriter, req *http.Request) {
 	if AlreadyLoggedIn(w, req) {
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
-	// var u model.User
+	fmt.Println("w,req--------------------------------------------", w, req)
+
 	// process form submission
 	if req.Method == http.MethodPost {
 		// get form values
+		fmt.Println("post")
 		un := req.FormValue("username")
 		p := req.FormValue("password")
 		f := req.FormValue("firstname")
 		l := req.FormValue("lastname")
 		r := req.FormValue("role")
+		fmt.Println("post2")
 		// username taken?
 		if _, ok := model.DBUsers[un]; ok {
 			http.Error(w, "Username already taken", http.StatusForbidden)
 			return
 		}
+		fmt.Println("2---------------------------------------------")
+
 		// create session
 		sID := uuid.NewV4()
 		c := &http.Cookie{
@@ -51,22 +58,28 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		}
 		c.MaxAge = model.SessionLength
 		http.SetCookie(w, c)
-		// dbSessions[c.Value] = session{un, time.Now()}
+		fmt.Println("3---------------------------------------------")
 		model.DBSessions[c.Value] = model.Session{un, time.Now()}
 		// store user in dbUsers
-		// bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
-		// if err != nil {
-		// 	http.Error(w, "Internal server error", http.StatusInternalServerError)
-		// 	return
-		// }
+
+		fmt.Println("4---------------------------------------------")
 		u = model.User{un, p, f, l, r}
+		fmt.Println("u", u)
 		model.DBUsers[un] = u
+		fmt.Println("model.DBUsers[un] ", model.DBUsers[un])
+
+		model.PutUser(req)
+		fmt.Println("PutUser")
 		// redirect
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
-	ShowSessions() // for demonstration purposes
-	model.Tpl.ExecuteTemplate(w, "signup.gohtml", u)
+	fmt.Println("222")
+	// ShowSessions() // for demonstration purposes
+	// tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+	// tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+	fmt.Println("333")
+	config.TPL.ExecuteTemplate(w, "signup.gohtml", u)
 }
 
 func Login(w http.ResponseWriter, req *http.Request) {
@@ -107,7 +120,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	ShowSessions() // for demonstration purposes
-	model.Tpl.ExecuteTemplate(w, "login.gohtml", u)
+	config.TPL.ExecuteTemplate(w, "login.gohtml", u)
 }
 
 func Logout(w http.ResponseWriter, req *http.Request) {

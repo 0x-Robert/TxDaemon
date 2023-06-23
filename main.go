@@ -1,16 +1,30 @@
 package main
 
 import (
+	"html/template"
 	"net/http"
+	"time"
 
-	cont "block-go-web/controller"
+	"go-web-boilerplate/config"
+	cont "go-web-boilerplate/controller"
+	"go-web-boilerplate/model"
 )
 
+var tpl *template.Template
+
 func main() {
-	http.HandleFunc("/", cont.Index)
+	http.HandleFunc("/", index)
+	http.HandleFunc("/bar", cont.Bar)
 	http.HandleFunc("/signup", cont.Signup)
 	http.HandleFunc("/login", cont.Login)
 	http.HandleFunc("/logout", cont.Logout)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
+}
+
+func index(w http.ResponseWriter, req *http.Request) {
+	u := cont.GetUser(w, req)
+	cont.ShowSessions() // for demonstration purposes
+	model.DBSessionsCleaned = time.Now()
+	config.TPL.ExecuteTemplate(w, "index.gohtml", u)
 }
