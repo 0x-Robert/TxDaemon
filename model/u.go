@@ -33,3 +33,18 @@ func getCode(s string) string {
 	io.WriteString(h, s)
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
+
+func CheckUserDb(r *http.Request) (User, error) {
+	u := User{}
+	u.UserName = r.FormValue("username")
+	u.Password = getCode(r.FormValue("password"))
+
+	row := config.DB.QueryRow("SELECT * FROM accout WHERE isbn = $1", u.UserName)
+
+	err := row.Scan(&u.UserName, &u.Password)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
