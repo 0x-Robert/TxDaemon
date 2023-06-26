@@ -69,7 +69,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		fmt.Println("model.DBUsers[un] ", model.DBUsers[un])
 
 		model.PutUser(req)
-		fmt.Println("PutUser")
+		fmt.Println("PutUser func ")
 		// redirect
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
@@ -146,5 +146,3 @@ func Logout(w http.ResponseWriter, req *http.Request) {
 
 	http.Redirect(w, req, "/login", http.StatusSeeOther)
 }
-
-

@@ -651,11 +651,11 @@ func Copy(dst Writer, src Reader) (written int64, err error)
 ```
 CREATE TABLE Account  (
    id INT PRIMARY KEY     NOT NULL,
-   name            CHAR(50)   NOT NULL,
-   password          CHAR(50)     NOT NULL,
-   first       CHAR(50) NOT NULL,
-   last         CHAR(50) NOT NULL,
-   role			   CHAR(50) NOT NULL
+   name            VARCHAR(50)   NOT NULL,
+   password          VARCHAR(50)     NOT NULL,
+   first       VARCHAR(50) NOT NULL,
+   last         VARCHAR(50) NOT NULL,
+   role			   VARCHAR(50) NOT NULL
 );
 ```
 
