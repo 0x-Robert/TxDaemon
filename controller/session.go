@@ -40,15 +40,21 @@ func AlreadyLoggedIn(w http.ResponseWriter, req *http.Request) bool {
 	if err != nil {
 		return false
 	}
+	// fmt.Println("c", c)
 	s, ok := model.DBSessions[c.Value]
+	// fmt.Println("s,ok", s, ok)
 	if ok {
 		s.LastActivity = time.Now()
 		model.DBSessions[c.Value] = s
 	}
 	_, ok = model.DBUsers[s.Un]
+	// fmt.Println("ok", ok)
+	// fmt.Println(" model.DBUsers[s.Un]", model.DBUsers[s.Un])
 	// refresh session
 	c.MaxAge = model.SessionLength
 	http.SetCookie(w, c)
+	// fmt.Println("w, c", w, c)
+	// fmt.Println("ok", ok)
 	return ok
 }
 

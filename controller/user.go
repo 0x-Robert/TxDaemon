@@ -31,12 +31,13 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
-	fmt.Println("w,req--------------------------------------------", w, req)
+	fmt.Println("w", w)
+	fmt.Println("req", req)
 
 	// process form submission
 	if req.Method == http.MethodPost {
 		// get form values
-		fmt.Println("post")
+		fmt.Println(" req.Method == http.MethodPost")
 		un := req.FormValue("username")
 		p := req.FormValue("password")
 		f := req.FormValue("firstname")
@@ -44,6 +45,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		r := req.FormValue("role")
 		fmt.Println("post2")
 		// username taken?
+		//.Println("model.DBUsers[un]", model.DBUsers[un])
 		if _, ok := model.DBUsers[un]; ok {
 			http.Error(w, "Username already taken", http.StatusForbidden)
 			return
@@ -68,8 +70,19 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		model.DBUsers[un] = u
 		fmt.Println("model.DBUsers[un] ", model.DBUsers[un])
 
-		model.PutUser(req)
-		fmt.Println("PutUser func ")
+		existCheck, err := model.CheckExistUser(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("existCheck", existCheck)
+		if existCheck == 0 {
+			model.PutUser(req)
+		} else {
+			fmt.Println("existCheck else")
+			http.Redirect(w, req, "/login", http.StatusConflict)
+		}
+
 		// redirect
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return

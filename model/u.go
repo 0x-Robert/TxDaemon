@@ -20,8 +20,8 @@ func PutUser(r *http.Request) (User, error) {
 	u.UserName = r.FormValue("username")
 	// u.Password = getCode(r.FormValue("password"))
 	u.Password = r.FormValue("password")
-	u.First = r.FormValue("first")
-	u.Last = r.FormValue("last")
+	u.First = r.FormValue("firstname")
+	u.Last = r.FormValue("lastname")
 	u.Role = r.FormValue("role")
 	fmt.Println("u Println ~~~ ", u)
 
@@ -71,23 +71,24 @@ func CheckUserDb(r *http.Request) (User, error) {
 	if err != nil {
 		return u, err
 	}
+	fmt.Println("CheckUserDb")
 	fmt.Println("row", row)
 
 	return u, nil
 }
 
 // 이미 존재하는 유저의 아이디와 비밀번호가 맞는지 체크
-func CheckExistUser(r *http.Request) (User, error) {
+func CheckExistUser(r *http.Request) (int, error) {
 	u := User{}
 	u.UserName = r.FormValue("username")
 
-	row := config.DB.QueryRow("SELECT * FROM accout WHERE name = $1", u.UserName)
-
-	err := row.Scan(&u.UserName, &u.Password)
+	row := config.DB.QueryRow("select count(name) from account where name = $1", u.UserName)
+	err := row.Scan(&count)
 	if err != nil {
-		return u, err
+		return count, err
 	}
-	fmt.Println("row", row)
 
-	return u, nil
+	fmt.Println("row count", count)
+
+	return count, nil
 }
