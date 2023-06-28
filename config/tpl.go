@@ -4,6 +4,6 @@ import "html/template"
 
 var TPL *template.Template
 
-func init() {
+func Init() {
 	TPL = template.Must(template.ParseGlob("templates/*.gohtml"))
 }

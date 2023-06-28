@@ -1,7 +1,6 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 	"time"
 
@@ -9,8 +8,6 @@ import (
 	cont "go-web-boilerplate/controller"
 	"go-web-boilerplate/model"
 )
-
-var tpl *template.Template
 
 func main() {
 	http.HandleFunc("/", index)
@@ -22,9 +19,13 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+func init() {
+	config.Init()
+	model.DBSessionsCleaned = time.Now()
+}
+
 func index(w http.ResponseWriter, req *http.Request) {
 	u := cont.GetUser(w, req)
 	cont.ShowSessions() // for demonstration purposes
-	model.DBSessionsCleaned = time.Now()
 	config.TPL.ExecuteTemplate(w, "index.gohtml", u)
 }

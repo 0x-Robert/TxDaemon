@@ -9,6 +9,7 @@ import (
 	"go-web-boilerplate/model"
 
 	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Bar(w http.ResponseWriter, req *http.Request) {
@@ -112,14 +113,14 @@ func Login(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 		// does the entered password match the stored password?
-		// err := bcrypt.CompareHashAndPassword(u.Password, []byte(p))
-		// if err != nil {
-		// 	http.Error(w, "Username and/or password do not match", http.StatusForbidden)
-		// 	return
-		// }
+		err := bcrypt.CompareHashAndPassword(u.Password, []byte(p))
+		if err != nil {
+			http.Error(w, "Username and/or password do not match", http.StatusForbidden)
+			return
+		}
 		// create session
-		// p2 := getCode(p)
-		fmt.Println(u, p)
+		p2 := model.GetCode(p)
+		fmt.Println("u,p,p2", u, p, p2)
 
 		sID := uuid.NewV4()
 		c := &http.Cookie{
@@ -156,6 +157,7 @@ func Logout(w http.ResponseWriter, req *http.Request) {
 	if time.Now().Sub(model.DBSessionsCleaned) > (time.Second * 30) {
 		go CleanSessions()
 	}
+	fmt.Println("call logout ")
 
 	http.Redirect(w, req, "/login", http.StatusSeeOther)
 }
