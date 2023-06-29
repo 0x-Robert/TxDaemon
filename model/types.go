@@ -24,3 +24,10 @@ type Session struct {
 	Un           string
 	LastActivity time.Time
 }
+
+type Book struct {
+	Isbn   string
+	Title  string
+	Author string
+	Price  float32
+}

@@ -11,6 +11,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", index)
+	http.HandleFunc("/books", cont.Index)
 	http.HandleFunc("/bar", cont.Bar)
 	http.HandleFunc("/signup", cont.Signup)
 	http.HandleFunc("/login", cont.Login)
@@ -24,8 +25,12 @@ func init() {
 	model.DBSessionsCleaned = time.Now()
 }
 
-func index(w http.ResponseWriter, req *http.Request) {
+func index(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/books", http.StatusSeeOther)
+}
+
+func my(w http.ResponseWriter, req *http.Request) {
 	u := cont.GetUser(w, req)
 	cont.ShowSessions() // for demonstration purposes
-	config.TPL.ExecuteTemplate(w, "index.gohtml", u)
+	config.TPL.ExecuteTemplate(w, "my.gohtml", u)
 }
